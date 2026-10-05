@@ -1,0 +1,307 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 1: Multiple Choice</title>
+<style>
+  :root{
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --ink:#1b2033;
+    --muted:#6b7288;
+    --line:#e3e6f0;
+    --accent:#4f46e5;
+    --accent-dark:#4038c9;
+    --accent-soft:#eef0ff;
+    --green:#16a34a;
+    --green-soft:#e8f7ee;
+    --red:#dc2626;
+    --red-soft:#fdecec;
+    --shadow:0 1px 2px rgba(27,32,51,.05),0 8px 24px rgba(27,32,51,.07);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .app{width:100%;max-width:880px;min-height:100%;padding:24px 16px 32px;display:flex;flex-direction:column}
+  .brand{font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);text-align:center;margin-bottom:14px}
+
+  .progress{display:none;margin-bottom:18px}
+  .progress.on{display:block}
+  .progress-top{display:flex;justify-content:space-between;align-items:baseline;font-size:.9rem;color:var(--muted);margin-bottom:8px}
+  .progress-top b{color:var(--ink);font-weight:700}
+  .bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+  .bar > i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .35s ease}
+
+  .stage{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .slide{display:none;animation:fade .25s ease}
+  .slide.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:32px 28px}
+
+  /* welcome / end */
+  .center{text-align:center}
+  h1{margin:0 0 12px;font-size:clamp(1.9rem,5vw,2.8rem);line-height:1.1;letter-spacing:-.02em;color:var(--accent)}
+  .lead{margin:0 auto 28px;max-width:34em;color:var(--muted);font-size:1.1rem;line-height:1.5}
+  .welcome{padding:56px 28px}
+
+  .btn{
+    appearance:none;border:0;cursor:pointer;font:inherit;font-weight:600;
+    border-radius:14px;padding:14px 26px;font-size:1.05rem;
+    transition:background .15s,transform .05s,opacity .15s,box-shadow .15s;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn:focus-visible,.opt:focus-visible{outline:3px solid rgba(79,70,229,.35);outline-offset:2px}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.28)}
+  .btn-primary:hover{background:var(--accent-dark)}
+  .btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn-ghost:hover{background:var(--accent-soft)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+  .btn-ghost:disabled:hover{background:#fff}
+
+  /* question */
+  .qnum{font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  .qtext{margin:0 0 26px;font-size:clamp(1.3rem,3.6vw,1.9rem);line-height:1.3;font-weight:700;letter-spacing:-.01em}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .opt{
+    appearance:none;text-align:left;font:inherit;color:var(--ink);cursor:pointer;
+    background:#fff;border:2px solid var(--line);border-radius:16px;
+    padding:16px 18px;display:flex;align-items:center;gap:14px;min-height:72px;
+    font-size:1.05rem;font-weight:500;line-height:1.3;
+    transition:border-color .15s,background .15s,box-shadow .15s,transform .05s;
+  }
+  .opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+  .opt:active:not(:disabled){transform:translateY(1px)}
+  .opt:disabled{cursor:default}
+  .letter{
+    flex:none;width:36px;height:36px;border-radius:50%;
+    display:grid;place-items:center;font-weight:700;font-size:.95rem;
+    background:var(--accent-soft);color:var(--accent);transition:background .15s,color .15s;
+  }
+  .opt.picked{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.picked .letter{background:var(--accent);color:#fff}
+  .opt.correct{border-color:var(--green);background:var(--green-soft);box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+  .opt.correct .letter{background:var(--green);color:#fff}
+  .opt.wrong{border-color:var(--red);background:var(--red-soft)}
+  .opt.wrong .letter{background:var(--red);color:#fff}
+  .opt.dim{opacity:.55}
+
+  .controls{display:none;gap:12px;justify-content:space-between;align-items:center;margin-top:22px}
+  .controls.on{display:flex}
+  .controls .btn-primary{flex:1;max-width:340px;margin-left:auto}
+  .hint{text-align:center;color:var(--muted);font-size:.8rem;margin-top:14px}
+  .hint kbd{background:#fff;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 6px;font:inherit;font-size:.78rem}
+
+  /* end */
+  .summary{
+    list-style:none;margin:22px 0 26px;padding:0;text-align:left;
+    max-height:min(52vh,460px);overflow-y:auto;
+    border:1px solid var(--line);border-radius:16px;background:#fbfbfe;
+  }
+  .summary li{display:flex;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .summary li:last-child{border-bottom:0}
+  .summary .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:.85rem;display:grid;place-items:center;margin-top:1px}
+  .summary .q{font-weight:600;line-height:1.35}
+  .summary .a{margin-top:4px;color:var(--green);font-weight:700;font-size:.95rem}
+  .summary .a span{color:var(--ink);font-weight:600}
+
+  @media (max-width:640px){
+    .app{padding:16px 12px 24px}
+    .card{padding:24px 18px;border-radius:18px}
+    .welcome{padding:40px 18px}
+    .opts{grid-template-columns:1fr}
+    .opt{min-height:64px}
+    .controls .btn{padding:14px 18px}
+    .hint{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .slide{animation:none}.bar > i{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brand">Sports Quiz</div>
+
+  <div class="progress" id="progress" aria-live="polite">
+    <div class="progress-top"><span>Question <b id="pnum">1</b> of 16</span><span id="ppct">0%</span></div>
+    <div class="bar"><i id="pfill"></i></div>
+  </div>
+
+  <main class="stage">
+    <!-- Welcome -->
+    <section class="slide card welcome center on" id="welcome">
+      <h1>Round 1: Multiple Choice</h1>
+      <p class="lead">16 sports trivia questions — pick an option or just click through to reveal the answer</p>
+      <button class="btn btn-primary" id="startBtn">Start</button>
+    </section>
+
+    <!-- Question -->
+    <section class="slide card" id="question" aria-live="polite">
+      <div class="qnum" id="qnum"></div>
+      <h2 class="qtext" id="qtext"></h2>
+      <div class="opts" id="opts"></div>
+    </section>
+
+    <!-- End -->
+    <section class="slide card center" id="end">
+      <h1>Round Complete</h1>
+      <p class="lead" style="margin-bottom:0">Here are all 16 questions with their correct answers.</p>
+      <ol class="summary" id="summary"></ol>
+      <button class="btn btn-primary" id="againBtn">Play Again</button>
+    </section>
+
+    <div class="controls" id="controls">
+      <button class="btn btn-ghost" id="prevBtn">← Previous</button>
+      <button class="btn btn-primary" id="nextBtn">Reveal Answer</button>
+    </div>
+    <div class="hint" id="hint"><kbd>Space</kbd> reveal / next &nbsp;·&nbsp; <kbd>←</kbd> <kbd>→</kbd> previous / next</div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var Q = [
+    {q:"What is the name of the autobiography of P.T. Usha?", o:["Playing to Win","Unbreakable","Golden Girl","Ace Against Odds"], a:2},
+    {q:"In which sport has India won 8 Olympic gold medals?", o:["Wrestling","Shooting","Weight Lifting","Field Hockey"], a:3},
+    {q:"The national sport of Sri Lanka is —", o:["Baseball","Volleyball","Cricket","Badminton"], a:1},
+    {q:"Which country is known as “the home of cricket”?", o:["England","Australia","West Indies","South Africa"], a:0},
+    {q:"The playground of baseball is known as —", o:["Court","Pitch","Ring","Diamond"], a:3},
+    {q:"What does BWF stand for?", o:["Badminton World Federation","Badminton World Foundation","Badminton World Friendship","None of the above"], a:0},
+    {q:"The term “double fault” is associated with which sport?", o:["Chess","Rugby","Tennis","Basketball"], a:2},
+    {q:"Which football player is known as the “Black Pearl”?", o:["Pelé","Bolt","Roosevelt","Tendulkar"], a:0},
+    {q:"Which national cricket team is called the “Kangaroos”?", o:["Indian cricket team","Sri Lanka cricket team","Australian cricket team","South African cricket team"], a:2},
+    {q:"“Playing It My Way” is the autobiography of —", o:["Sachin Tendulkar","Usain Bolt","P.T. Usha","Muhammad Ali"], a:0},
+    {q:"Which is the largest cricket stadium in the world?", o:["Eden Gardens","Motera Stadium","Lord’s Cricket Ground","Melbourne Cricket Ground"], a:1},
+    {q:"Which country won the first Blind Women’s T20 World Cup?", o:["Australia","Sri Lanka","Nepal","India"], a:3},
+    {q:"Pen-holder grip is used in which sport?", o:["Cricket","Hockey","Badminton","Table Tennis"], a:3},
+    {q:"Which country has hosted the Olympics the most times?", o:["Germany","England","USA","France"], a:2},
+    {q:"How many countries participated in the first Olympics?", o:["12","15","14","21"], a:2},
+    {q:"What is the official national sport of China?", o:["Hockey","Badminton","Cricket","Table Tennis"], a:3}
+  ];
+  var L = ["A","B","C","D"], N = Q.length;
+
+  var $ = function(id){return document.getElementById(id)};
+  var welcome=$("welcome"), question=$("question"), end=$("end");
+  var controls=$("controls"), hint=$("hint"), progress=$("progress");
+  var prevBtn=$("prevBtn"), nextBtn=$("nextBtn");
+
+  var idx = -1;                       // -1 welcome, 0..N-1 questions, N end
+  var picked = [], revealed = [];
+
+  function reset(){ picked = []; revealed = []; for(var i=0;i<N;i++){picked.push(null);revealed.push(false);} }
+
+  function show(el){
+    [welcome,question,end].forEach(function(s){ s.classList.toggle("on", s===el); });
+  }
+
+  function render(){
+    var onQ = idx>=0 && idx<N;
+    progress.classList.toggle("on", onQ);
+    controls.classList.toggle("on", onQ);
+    hint.style.display = (idx===-1 || onQ) ? "" : "none";
+
+    if(idx===-1){ show(welcome); return; }
+    if(idx>=N){ buildSummary(); show(end); $("againBtn").focus({preventScroll:true}); return; }
+
+    var q = Q[idx];
+    $("qnum").textContent = "Question " + (idx+1);
+    $("qtext").textContent = q.q;
+    $("pnum").textContent = idx+1;
+    var pct = Math.round(((idx + (revealed[idx]?1:0)) / N) * 100);
+    $("pfill").style.width = pct + "%";
+    $("ppct").textContent = pct + "%";
+
+    var wrap = $("opts"); wrap.innerHTML = "";
+    q.o.forEach(function(text,i){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "opt"; b.dataset.i = i;
+      b.innerHTML = '<span class="letter">'+L[i]+'</span><span class="otext"></span>';
+      b.querySelector(".otext").textContent = text;
+      if(revealed[idx]){
+        b.disabled = true;
+        if(i===q.a) b.classList.add("correct");
+        else if(i===picked[idx]) b.classList.add("wrong");
+        else b.classList.add("dim");
+      } else if(i===picked[idx]){
+        b.classList.add("picked"); b.setAttribute("aria-pressed","true");
+      }
+      b.addEventListener("click", function(){ pick(i); });
+      wrap.appendChild(b);
+    });
+
+    prevBtn.disabled = idx===0;
+    nextBtn.textContent = revealed[idx] ? (idx===N-1 ? "Finish →" : "Next →") : "Reveal Answer";
+    show(question);
+  }
+
+  function pick(i){
+    if(revealed[idx]) return;
+    picked[idx] = (picked[idx]===i) ? null : i;
+    render();
+  }
+
+  function revealOrNext(){
+    if(idx<0 || idx>=N) return;
+    if(!revealed[idx]){ revealed[idx] = true; render(); }
+    else { idx++; render(); }
+  }
+  function next(){ if(idx>=0 && idx<N){ idx++; render(); } }
+  function prev(){ if(idx>0){ idx--; render(); } }
+
+  function buildSummary(){
+    var ol = $("summary"); ol.innerHTML = "";
+    Q.forEach(function(q,i){
+      var li = document.createElement("li");
+      li.innerHTML = '<div class="n"></div><div><div class="q"></div><div class="a"></div></div>';
+      li.querySelector(".n").textContent = i+1;
+      li.querySelector(".q").textContent = q.q;
+      var a = li.querySelector(".a");
+      a.textContent = L[q.a] + ". ";
+      var s = document.createElement("span"); s.textContent = q.o[q.a]; a.appendChild(s);
+      ol.appendChild(li);
+    });
+    ol.scrollTop = 0;
+  }
+
+  function start(){ reset(); idx = 0; render(); window.scrollTo(0,0); }
+  function again(){ reset(); idx = -1; render(); window.scrollTo(0,0); $("startBtn").focus({preventScroll:true}); }
+
+  $("startBtn").addEventListener("click", start);
+  $("againBtn").addEventListener("click", again);
+  nextBtn.addEventListener("click", revealOrNext);
+  prevBtn.addEventListener("click", prev);
+
+  document.addEventListener("keydown", function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    if(e.key===" " || e.code==="Space"){
+      e.preventDefault();
+      if(e.repeat) return;
+      if(idx===-1) start();
+      else if(idx>=N) again();
+      else revealOrNext();
+    } else if(e.key==="ArrowRight"){
+      if(idx===-1) start(); else next();
+    } else if(e.key==="ArrowLeft"){
+      prev();
+    }
+  });
+  // stop the browser's own "space = click focused button" from double-firing
+  document.addEventListener("keyup", function(e){
+    if(e.key===" " || e.code==="Space") e.preventDefault();
+  });
+
+  reset(); render();
+})();
+</script>
+</body>
+</html>
+
+</body></html>
