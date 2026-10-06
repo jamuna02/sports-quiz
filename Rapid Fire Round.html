@@ -1,0 +1,260 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Rapid Fire Round</title>
+<style>
+/* Layout: one full-height stage; one slide at a time, centered column, team accent drives progress, intro and reveal. */
+:root{
+  --bg:#fbfaf7;
+  --card:#ffffff;
+  --ink:#16181d;
+  --muted:#5d6370;
+  --line:#e6e3dc;
+  --green:#14833b;
+  --green-bg:#e6f6ec;
+  --t1:#2563eb; --t1-soft:#e7efff;
+  --t2:#e8553f; --t2-soft:#ffebe7;
+  --t3:#16996a; --t3-soft:#e1f6ee;
+  --t4:#7c4dde; --t4-soft:#efe8fd;
+  --t:#16181d; --t-soft:#efede8;
+  --display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --body:'Figtree','Segoe UI',system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.4;padding-inline:16px;overflow-x:hidden}
+.team-1{--t:var(--t1);--t-soft:var(--t1-soft)}
+.team-2{--t:var(--t2);--t-soft:var(--t2-soft)}
+.team-3{--t:var(--t3);--t-soft:var(--t3-soft)}
+.team-4{--t:var(--t4);--t-soft:var(--t4-soft)}
+#stage{min-height:100%;max-width:1100px;margin-inline:auto;display:flex;flex-direction:column;padding-block:20px}
+.slide{flex:1;display:flex;flex-direction:column;gap:24px;min-width:0;animation:in .28s ease both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide{animation:none}}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.05;letter-spacing:-.02em}
+.center{align-items:center;justify-content:center;text-align:center}
+.eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* buttons */
+.btn{font:inherit;font-weight:700;font-size:1.25rem;border:0;border-radius:16px;padding:16px 32px;cursor:pointer;background:var(--t);color:#fff;box-shadow:0 6px 18px rgba(22,24,29,.15);transition:transform .12s ease,box-shadow .12s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:focus-visible{outline:4px solid var(--ink);outline-offset:3px}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line)}
+.btn[disabled]{opacity:.35;cursor:not-allowed;transform:none}
+.btn.dark{--t:var(--ink)}
+
+/* welcome */
+.title{font-size:clamp(3rem,10vw,7rem);font-weight:800}
+.title span{background:linear-gradient(90deg,var(--t1),var(--t4));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:clamp(1.1rem,2.4vw,1.5rem);color:var(--muted);max-width:34ch;margin:0}
+.order{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
+.chip{font-weight:700;padding:8px 18px;border-radius:999px;background:var(--t-soft);color:var(--t)}
+.chip.team-1,.chip.team-2,.chip.team-3,.chip.team-4{background:var(--t-soft);color:var(--t)}
+.arrow{color:var(--muted);font-weight:700}
+
+/* team intro */
+.big-team{font-size:clamp(4rem,18vw,12rem);font-weight:800;color:var(--t);line-height:.9}
+.intro-sub{font-size:clamp(1.2rem,3vw,1.8rem);color:var(--muted);margin:0}
+
+/* question slide */
+.topbar{display:flex;flex-direction:column;gap:12px}
+.progress-label{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-weight:700;font-size:1.1rem}
+.progress-label b{color:var(--t)}
+.bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.bar i{height:10px;border-radius:99px;background:var(--line)}
+.bar i.on{background:var(--t)}
+.q-card{background:var(--card);border-radius:24px;padding:clamp(20px,4vw,40px);box-shadow:0 10px 30px rgba(22,24,29,.07);border:1px solid var(--line)}
+.q-text{font-size:clamp(1.7rem,4.4vw,3rem);font-weight:700}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.opt{display:flex;align-items:center;gap:16px;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:clamp(14px,2.4vw,24px);font-size:clamp(1.2rem,2.6vw,1.8rem);font-weight:600;min-width:0;box-shadow:0 4px 12px rgba(22,24,29,.04)}
+.opt .l{flex:none;width:2.4em;height:2.4em;border-radius:12px;display:grid;place-items:center;background:var(--t-soft);color:var(--t);font-family:var(--display);font-weight:800;font-size:.85em}
+.opt .tx{min-width:0;overflow-wrap:anywhere}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:auto;flex-wrap:wrap}
+.hint{color:var(--muted);font-size:.9rem;text-align:center}
+
+/* reveal */
+.reveal-head{display:flex;flex-direction:column;gap:6px}
+.reveal-head h2{font-size:clamp(2rem,6vw,3.6rem);color:var(--t)}
+.qa-list{display:flex;flex-direction:column;gap:16px}
+.qa{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(16px,3vw,26px);display:grid;gap:14px;box-shadow:0 6px 18px rgba(22,24,29,.05)}
+.qa h3{font-size:clamp(1.25rem,2.8vw,1.8rem);font-weight:700;display:flex;gap:14px;align-items:baseline}
+.qa h3 .n{flex:none;font-family:var(--display);color:var(--t);font-size:1.1em}
+.qa .opts{gap:10px}
+.qa .opt{font-size:clamp(1rem,2vw,1.35rem);padding:10px 14px;box-shadow:none}
+.qa .opt.ok{background:var(--green-bg);border-color:var(--green);color:var(--green);font-weight:800}
+.qa .opt.ok .l{background:var(--green);color:#fff}
+.tick{margin-left:auto;flex:none;font-weight:800}
+.qa .opt:not(.ok){color:var(--muted);font-weight:500}
+
+/* end */
+.master{display:flex;flex-direction:column;gap:20px;max-height:55vh;overflow-y:auto;padding:4px;border-radius:20px;background:var(--card);border:1px solid var(--line)}
+.master section{padding:16px 20px;border-bottom:1px solid var(--line)}
+.master section:last-child{border-bottom:0}
+.master h3{font-size:1.4rem;color:var(--t);margin-bottom:10px}
+.master ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.master li{display:grid;grid-template-columns:2.2em 1fr;gap:8px;font-size:1.05rem}
+.master li .n{font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
+.master .a{color:var(--green);font-weight:800}
+.end-top{align-items:center;text-align:center}
+.end-top h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800}
+
+@media (max-width:640px){
+  body{font-size:16px}
+  .opts{grid-template-columns:1fr}
+  .btn{padding:14px 22px;font-size:1.1rem}
+  .nav .btn{flex:1}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@500;600;700;800&display=swap">
+
+<div id="stage" aria-live="polite"></div>
+
+<script>
+const TEAMS = [
+  [
+    {q:"What is the name of the autobiography of P.T. Usha?", o:["Playing to Win","Unbreakable","Golden Girl","Ace Against Odds"], a:2},
+    {q:"In which sport has India won 8 Olympic gold medals?", o:["Wrestling","Shooting","Weight Lifting","Field Hockey"], a:3},
+    {q:"The national sport of Sri Lanka is —", o:["Baseball","Volleyball","Cricket","Badminton"], a:1},
+    {q:"Which country is known as “the home of cricket”?", o:["England","Australia","West Indies","South Africa"], a:0}
+  ],
+  [
+    {q:"The playground of baseball is known as —", o:["Court","Pitch","Ring","Diamond"], a:3},
+    {q:"What does BWF stand for?", o:["Badminton World Federation","Badminton World Foundation","Badminton World Friendship","None of the above"], a:0},
+    {q:"The term “double fault” is associated with which sport?", o:["Chess","Rugby","Tennis","Basketball"], a:2},
+    {q:"Which football player is known as the “Black Pearl”?", o:["Pelé","Bolt","Roosevelt","Tendulkar"], a:0}
+  ],
+  [
+    {q:"Which national cricket team is called the “Kangaroos”?", o:["Indian cricket team","Sri Lanka cricket team","Australian cricket team","South African cricket team"], a:2},
+    {q:"“Playing It My Way” is the autobiography of —", o:["Sachin Tendulkar","Usain Bolt","P.T. Usha","Muhammad Ali"], a:0},
+    {q:"Which is the largest cricket stadium in the world?", o:["Eden Gardens","Motera Stadium","Lord’s Cricket Ground","Melbourne Cricket Ground"], a:1},
+    {q:"Which country won the first Blind Women’s T20 World Cup?", o:["Australia","Sri Lanka","Nepal","India"], a:3}
+  ],
+  [
+    {q:"Pen-holder grip is used in which sport?", o:["Cricket","Hockey","Badminton","Table Tennis"], a:3},
+    {q:"Which country has hosted the Olympics the most times?", o:["Germany","England","USA","France"], a:2},
+    {q:"How many countries participated in the first Olympics?", o:["12","15","14","21"], a:2},
+    {q:"What is the official national sport of China?", o:["Hockey","Badminton","Cricket","Table Tennis"], a:3}
+  ]
+];
+const L = ["A","B","C","D"];
+
+// Build the flat sequence of slides
+const seq = [{k:"welcome"}];
+TEAMS.forEach((_, t) => {
+  seq.push({k:"intro", t});
+  for (let i = 0; i < 4; i++) seq.push({k:"q", t, i});
+  seq.push({k:"reveal", t});
+});
+seq.push({k:"end"});
+
+let pos = 0;
+const stage = document.getElementById("stage");
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+function optsHTML(item, reveal) {
+  return `<div class="opts">` + item.o.map((txt, n) => {
+    const ok = reveal && n === item.a;
+    return `<div class="opt${ok ? " ok" : ""}"><span class="l">${L[n]}</span><span class="tx">${esc(txt)}</span>${ok ? '<span class="tick" aria-label="Correct answer">✓</span>' : ""}</div>`;
+  }).join("") + `</div>`;
+}
+
+function render() {
+  const s = seq[pos];
+  const cls = s.t !== undefined ? `team-${s.t + 1}` : "";
+  let h = "";
+
+  if (s.k === "welcome") {
+    h = `<div class="slide center">
+      <div class="eyebrow">Live team quiz · Sports</div>
+      <h1 class="title"><span>Rapid Fire</span><br>Round</h1>
+      <p class="lede">4 teams, 4 questions each — answers revealed together at the end of each team's turn</p>
+      <div class="order">${[1,2,3,4].map((n,i)=>`<span class="chip team-${n}">Team ${n}</span>${i<3?'<span class="arrow">→</span>':""}`).join("")}</div>
+      <button class="btn dark" data-act="next">Start</button>
+    </div>`;
+  }
+  else if (s.k === "intro") {
+    h = `<div class="slide center ${cls}">
+      <div class="eyebrow">Up next</div>
+      <div class="big-team">TEAM ${s.t + 1}</div>
+      <p class="intro-sub">4 Questions</p>
+      <button class="btn" data-act="next">Begin →</button>
+    </div>`;
+  }
+  else if (s.k === "q") {
+    const item = TEAMS[s.t][s.i];
+    h = `<div class="slide ${cls}">
+      <div class="topbar">
+        <div class="progress-label"><span><b>Team ${s.t + 1}</b> — Question ${s.i + 1} of 4</span></div>
+        <div class="bar">${[0,1,2,3].map(n=>`<i class="${n<=s.i?"on":""}"></i>`).join("")}</div>
+      </div>
+      <div class="q-card"><h2 class="q-text">${esc(item.q)}</h2></div>
+      ${optsHTML(item, false)}
+      <div class="nav">
+        <button class="btn ghost" data-act="prev" ${s.i === 0 ? "disabled" : ""}>← Previous</button>
+        <button class="btn" data-act="next">Next →</button>
+      </div>
+      <div class="hint">Space or → for next</div>
+    </div>`;
+  }
+  else if (s.k === "reveal") {
+    const last = s.t === TEAMS.length - 1;
+    h = `<div class="slide ${cls}">
+      <div class="reveal-head">
+        <div class="eyebrow">Answers</div>
+        <h2>Team ${s.t + 1}</h2>
+      </div>
+      <div class="qa-list">${TEAMS[s.t].map((item, i) => `
+        <article class="qa"><h3><span class="n">${s.t * 4 + i + 1}.</span><span>${esc(item.q)}</span></h3>${optsHTML(item, true)}</article>`).join("")}
+      </div>
+      <div class="nav" style="justify-content:flex-end">
+        <button class="btn" data-act="next">${last ? "Finish →" : "Next Team →"}</button>
+      </div>
+    </div>`;
+  }
+  else if (s.k === "end") {
+    h = `<div class="slide">
+      <div class="end-top"><div class="eyebrow">All 4 teams done</div><h1>Rapid Fire Complete</h1></div>
+      <div class="master" tabindex="0" aria-label="All questions and answers">
+        ${TEAMS.map((qs, t) => `<section class="team-${t+1}"><h3>Team ${t+1}</h3><ol>${qs.map((item,i)=>`
+          <li><span class="n">${t*4+i+1}.</span><span>${esc(item.q)}<br><span class="a">${L[item.a]}. ${esc(item.o[item.a])}</span></span></li>`).join("")}</ol></section>`).join("")}
+      </div>
+      <div class="nav" style="justify-content:center"><button class="btn dark" data-act="restart">Play Again</button></div>
+    </div>`;
+  }
+
+  stage.innerHTML = h;
+  window.scrollTo(0, 0);
+  const b = stage.querySelector('[data-act="next"],[data-act="restart"]');
+  if (b) b.focus({preventScroll:true});
+}
+
+function next() { if (pos < seq.length - 1) { pos++; render(); } }
+function prev() {
+  const s = seq[pos];
+  if (s.k === "q" && s.i > 0) { pos--; render(); }
+}
+function restart() { pos = 0; render(); }
+
+stage.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]");
+  if (!b || b.disabled) return;
+  ({next, prev, restart})[b.dataset.act]();
+});
+
+document.addEventListener("keydown", e => {
+  if (e.target.closest && e.target.closest(".master")) { if (e.key === " " ) return; }
+  if (e.key === "ArrowRight" || e.key === " ") {
+    e.preventDefault();
+    if (seq[pos].k === "end") return;
+    next();
+  } else if (e.key === "ArrowLeft") {
+    e.preventDefault();
+    prev();
+  }
+});
+
+document.addEventListener("keyup", e => { if (e.key === " ") e.preventDefault(); });
+
+render();
+</script>
+
+</body></html>
